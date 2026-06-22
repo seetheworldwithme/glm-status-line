@@ -17,6 +17,7 @@ import os from "node:os";
 import path from "node:path";
 
 import { getCacheRoot } from "../../shared/utils.js";
+import { isLiveRateStreaming, readLiveRate } from "../../proxy/status.js";
 
 const TTL_MS = 10_000; // recompute at most every 10s
 const TAIL_LINES = 200; // only the recent tail is needed for a live rate
@@ -167,6 +168,34 @@ export async function getSessionRate(sessionId, now = Date.now(), options = {}) 
   }
 
   return result;
+}
+
+// Resolve the rate to show in the status bar. Prefers the proxy's live,
+// in-flight tok/s (only meaningful while a response is actively streaming);
+// otherwise falls back to the transcript-based rate of the most recent
+// completed turn(s). Never throws — returns null on any failure so the segment
+// stays hidden gracefully.
+export async function resolveRate(config, options = {}) {
+  const now = options.now ?? Date.now();
+
+  try {
+    const live = await readLiveRate(options.liveRatePath);
+    if (isLiveRateStreaming(live, now)) {
+      return {
+        rate: live.rate,
+        outputTokens: Number.isFinite(live.outputTokens) ? live.outputTokens : null,
+        source: "live"
+      };
+    }
+  } catch {
+    // live rate unavailable — fall through to transcript method
+  }
+
+  const fallback = await getSessionRate(config?.sessionId, now, options);
+  if (fallback) {
+    return { ...fallback, source: "transcript" };
+  }
+  return null;
 }
 
 export { computeRate, parseRecentMessages, findSessionTranscript };

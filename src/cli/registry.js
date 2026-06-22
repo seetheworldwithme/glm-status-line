@@ -156,6 +156,56 @@ export const COMMAND_REGISTRY = {
     json: false
   },
 
+  "proxy start": {
+    name: "proxy start",
+    summary:
+      "Run the local streaming-rate proxy in the foreground. Forwards Claude Code requests to GLM and measures live output tok/s. For always-on use, prefer 'proxy install' (launchd/systemd service).",
+    sideEffect: "mutating",
+    args: [],
+    flags: [
+      { name: "--port <n>", required: false, description: "Loopback port to listen on (default 7821)." },
+      {
+        name: "--upstream <url>",
+        required: false,
+        description: "Real GLM base URL to forward to (defaults to ANTHROPIC_BASE_URL / stored upstream)."
+      }
+    ],
+    examples: [
+      "glm-status-line proxy start",
+      "glm-status-line proxy start --port 7821 --upstream https://open.bigmodel.cn/api/anthropic"
+    ],
+    json: false
+  },
+
+  "proxy status": {
+    name: "proxy status",
+    summary: "Print the latest live-rate snapshot (state, tok/s, output tokens) from the proxy's status file.",
+    sideEffect: "read",
+    args: [],
+    examples: ["glm-status-line proxy status"],
+    json: false
+  },
+
+  "proxy install": {
+    name: "proxy install",
+    summary:
+      "Install the proxy as a launchd/systemd service and point Claude Code's ANTHROPIC_BASE_URL at it. Backs up the previous base URL. Restart Claude Code afterward.",
+    sideEffect: "mutating",
+    args: [],
+    examples: ["glm-status-line proxy install"],
+    json: false
+  },
+
+  "proxy uninstall": {
+    name: "proxy uninstall",
+    summary:
+      "Stop + remove the proxy service and restore the previous ANTHROPIC_BASE_URL. Restart Claude Code afterward.",
+    sideEffect: "mutating",
+    args: [],
+    examples: ["glm-status-line proxy uninstall"],
+    json: false
+  },
+
   "model list": {
     name: "model list",
     summary: "List all models and their context window sizes. Custom mappings are marked with *.",
@@ -217,7 +267,8 @@ export const ENVIRONMENT = [
 // Commands grouped by their first token, for focused subcommand help.
 export const COMMAND_GROUPS = {
   model: ["model list", "model get", "model set", "model remove"],
-  config: ["config show", "config set", "config unset", "config reset"]
+  config: ["config show", "config set", "config unset", "config reset"],
+  proxy: ["proxy start", "proxy status", "proxy install", "proxy uninstall"]
 };
 
 export function allCommands() {

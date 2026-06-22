@@ -17,6 +17,8 @@ const RESET_USER_KEYS = [
   "resetFormat",
   "authToken",
   "baseUrl",
+  "upstreamBaseUrl",
+  "proxy",
   "multiplier"
 ];
 

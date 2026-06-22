@@ -20,6 +20,7 @@ import { checkForUpdates } from "./update.js";
 import { getPackageVersion } from "../shared/packageInfo.js";
 import { handleModelCommand } from "./modelCommand.js";
 import { handleConfigReset } from "./configCommand.js";
+import { handleProxyCommand } from "./proxyCommand.js";
 import { renderCommandsTable } from "./help.js";
 import { COMMAND_REGISTRY, GLOBAL_FLAGS, ENVIRONMENT, allCommands } from "./registry.js";
 import {
@@ -298,6 +299,10 @@ export async function handleCommand(args, output = process.stdout, dependencies 
 
   if (command === "model") {
     return handleModelCommand(subcommand, key, value, output, dependencies.configPath);
+  }
+
+  if (command === "proxy") {
+    return handleProxyCommand(subcommand, args, output, dependencies);
   }
 
   if (command === "configure") {

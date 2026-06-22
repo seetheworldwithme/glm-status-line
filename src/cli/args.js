@@ -17,6 +17,8 @@ const FLAGS = [
   { names: ["--json"], dest: "json", boolean: true },
   { names: ["--yes"], dest: "yes", boolean: true },
   { names: ["--models"], dest: "models", boolean: true },
+  { names: ["--port"], dest: "port" },
+  { names: ["--upstream"], dest: "upstream" },
   { names: ["--help", "-h"], dest: "help", boolean: true },
   { names: ["--version", "-v"], dest: "version", boolean: true }
 ];

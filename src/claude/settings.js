@@ -129,6 +129,33 @@ function normalizeToolConfig(config) {
     normalized.baseUrl = baseUrl;
   }
 
+  // Real GLM upstream recorded by the rate-proxy installer. Used by loadConfig
+  // to classify the host (isGLM/quotaUrl) when ANTHROPIC_BASE_URL points at the
+  // local proxy (127.0.0.1).
+  const upstreamBaseUrl = normalizeOptionalString(base.upstreamBaseUrl);
+  if (upstreamBaseUrl) {
+    normalized.upstreamBaseUrl = upstreamBaseUrl;
+  }
+
+  // Preserve rate-proxy settings (port, upstream override, service metadata).
+  if (base.proxy && typeof base.proxy === "object") {
+    const proxy = {};
+    const port = Number(base.proxy.port);
+    if (Number.isInteger(port) && port > 0 && port <= 65535) {
+      proxy.port = port;
+    }
+    const proxyUpstream = normalizeOptionalString(base.proxy.upstreamBaseUrl);
+    if (proxyUpstream) {
+      proxy.upstreamBaseUrl = proxyUpstream;
+    }
+    if (base.proxy.service && typeof base.proxy.service === "object") {
+      proxy.service = base.proxy.service;
+    }
+    if (Object.keys(proxy).length > 0) {
+      normalized.proxy = proxy;
+    }
+  }
+
   // Preserve lines (component-level config) as-is
   if (base.lines && Array.isArray(base.lines)) {
     normalized.lines = base.lines;

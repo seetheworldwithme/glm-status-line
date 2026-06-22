@@ -12,7 +12,7 @@ import { getPackageVersion } from "../shared/packageInfo.js";
 import { getContextData } from "../core/context/index.js";
 import { resolveMultiplierConfig } from "../core/multiplier/index.js";
 import { getTodayUsage } from "../core/today/index.js";
-import { getSessionRate } from "../core/rate/index.js";
+import { resolveRate } from "../core/rate/index.js";
 import { mergeModelMap } from "../core/context/models.js";
 import { readCtxCache, writeCtxCache, usableCached } from "../core/context/cache.js";
 import { cleanupExpiredCache } from "../core/quota/cache.js";
@@ -103,11 +103,12 @@ async function handleStatusLine(args, userConfig, config, statusLineInput, quota
     todayUsage = null;
   }
 
-  // Real-time generation speed (tok/s) for the current session, read from its
-  // transcript. Cached briefly; failures degrade to null (segment hidden).
+  // Generation speed (tok/s). Prefers the proxy's live in-flight rate while a
+  // response is streaming; otherwise falls back to the transcript-based rate of
+  // the most recent completed turn(s). Failures degrade to null (segment hidden).
   let sessionRate = null;
   try {
-    sessionRate = await getSessionRate(config.sessionId);
+    sessionRate = await resolveRate(config);
   } catch {
     sessionRate = null;
   }

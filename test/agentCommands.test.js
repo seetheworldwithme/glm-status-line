@@ -144,7 +144,8 @@ test("registry has an entry for every command the CLI actually dispatches", () =
     "model",
     "install",
     "uninstall",
-    "configure"
+    "configure",
+    "proxy"
   ]);
 
   for (const cmd of allCommands()) {

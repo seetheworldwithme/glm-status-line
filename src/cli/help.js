@@ -41,6 +41,10 @@ Usage:
   glm-status-line model set <model-id> <size>
   glm-status-line model remove <model-id>
   glm-status-line configure
+  glm-status-line proxy start [--port <n>] [--upstream <url>]
+  glm-status-line proxy status
+  glm-status-line proxy install
+  glm-status-line proxy uninstall
 
 When run without arguments, displays comprehensive quota usage (5h, week, MCP)
 with full reset dates. Use --display to choose left or used metric.
@@ -69,6 +73,13 @@ Model commands:
   model get <id>          Show the context window size for a model.
   model set <id> <size>   Set a model's context window size (e.g. 300K or 300000).
   model remove <id>       Remove a custom model mapping (built-in models revert to default).
+
+Proxy commands (live streaming tok/s):
+  proxy start             Run the local rate proxy in the foreground. Forwards Claude Code → GLM
+                          and measures live output tok/s. [--port <n>] [--upstream <url>]
+  proxy status            Print the latest live-rate snapshot (state, tok/s, output tokens).
+  proxy install           Install the proxy as a launchd/systemd service and point Claude Code at it.
+  proxy uninstall         Stop + remove the service and restore the previous base URL.
 
 Pass a command before --help for focused help (e.g. model --help, config set --help).
 
@@ -251,6 +262,10 @@ export function renderCommandsTable(output = process.stdout) {
     "model remove",
     "install",
     "uninstall",
+    "proxy start",
+    "proxy status",
+    "proxy install",
+    "proxy uninstall",
     "configure"
   ];
 

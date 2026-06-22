@@ -62,6 +62,21 @@ export const DEFAULT_CN_BASE_URL = "https://open.bigmodel.cn";
 export const DEFAULT_INTL_BASE_URL = "https://api.z.ai";
 export const DEFAULT_TIMEOUT_MS = 5000;
 
+// Live streaming-rate proxy. The proxy intercepts the SSE stream between Claude
+// Code and GLM to measure in-flight output tokens/s (unavailable from the
+// transcript, which only records usage at turn completion).
+export const DEFAULT_PROXY_PORT = 7821;
+// Sliding window for instantaneous rate (output_tokens readings within this
+// age contribute to the current tok/s).
+export const PROXY_RATE_WINDOW_MS = 2500;
+// How often the proxy rewrites the live-rate status file while streaming.
+export const PROXY_WRITE_INTERVAL_MS = 300;
+// No activity (no delta) for this long → mark the turn idle.
+export const PROXY_IDLE_TIMEOUT_MS = 3000;
+// The status line treats the live-rate file as fresh for this long after the
+// proxy last wrote it. Past this, it falls back to the transcript method.
+export const PROXY_STALE_MS = 5000;
+
 export const REFRESH_BANDS = [
   { minLeftPercent: 80, ttlMs: 120_000 }, // 2 min
   { minLeftPercent: 30, ttlMs: 300_000 }, // 5 min

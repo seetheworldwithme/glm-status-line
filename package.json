@@ -1,0 +1,49 @@
+{
+  "name": "glm-status-line",
+  "version": "1.2.0",
+  "description": "GLM Coding Plan status line for Claude Code — 5h quota, weekly pace, consumption multiplier (倍率), context window, and MCP usage in one bar.",
+  "type": "module",
+  "license": "MIT",
+  "preferGlobal": true,
+  "keywords": [
+    "claude-code",
+    "glm",
+    "zhipu",
+    "z.ai",
+    "coding-plan",
+    "quota",
+    "statusline",
+    "mcp",
+    "multiplier",
+    "tui"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/seetheworldwithme/glm-status-line.git"
+  },
+  "homepage": "https://github.com/seetheworldwithme/glm-status-line#readme",
+  "bugs": {
+    "url": "https://github.com/seetheworldwithme/glm-status-line/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "src",
+    "data",
+    "README.md",
+    "README.en.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "bin": {
+    "glm-status-line": "src/cli/index.js"
+  },
+  "scripts": {
+    "start": "node ./src/cli/index.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
